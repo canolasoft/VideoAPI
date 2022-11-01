@@ -25,7 +25,7 @@ MarkupPy==1.14
 oauthlib==3.1.0
 odfpy==1.4.1
 openpyxl==3.0.5
-Pillow==7.1.2
+Pillow==9.0.1
 pipenv==2018.11.26
 pycparser==2.20
 PyJWT==1.7.1
