@@ -1,9 +1,13 @@
+from asyncio.log import logger
 from rest_framework import viewsets
 import django_filters
 from django.shortcuts import render
 from .serializers import *
 from .models import *
 from rest_framework.generics import(ListCreateAPIView)
+
+
+############## API
 
 # Consulta 0: dame los datos de la app
 class DatappViewSet(viewsets.ModelViewSet):
@@ -13,12 +17,6 @@ class DatappViewSet(viewsets.ModelViewSet):
 	def get_queryset(self):
 		kap = self.request.GET.get('kap')
 		return Datapp.objects.filter(keyapp = kap)
-
-# index de prueba (muestra todos los artistas)
-def index(request):
-	artistas = Artista.objects.all().order_by('nombre_a')
-	context = {'artistas':artistas}
-	return render(request, "landing/index.html", context)
 
 # Consulta 1: dame todos los Artistas
 class ArtistasViewSet(viewsets.ModelViewSet):
@@ -82,3 +80,28 @@ class VideoSerializer(ListCreateAPIView):
 			id_c = self.request.GET.get('id')
 			video = Video.objects.filter(id_c = id_c)
 			return video
+
+
+
+############ LANDING
+def index(request):
+# Home index (lista de artistas)
+	artistas = Artista.objects.all().order_by('?')
+	#videos = Video.objects.all()
+	context = {
+		'artistas':artistas,
+        #'videos':videos,
+        }
+	return render(request, "landing/index.html", context)
+
+# Artista perfil (datos del artista y lista de videos)
+def artista(request):
+	id_a = request.GET.get('id')
+	artista = Artista.objects.filter(id_a = id_a).first
+	logger.error("artista: "+str(artista))
+	videos = Video.objects.filter(id_a = id_a)
+	context = {
+		'artista':artista,
+        'videos':videos,
+        }
+	return render(request, "landing/artista.html", context)
